@@ -91,9 +91,30 @@
       var container = document.getElementById('qr-code');
       if (!container) return;
 
+      var parsePixels = function (value) {
+        return parseFloat(value) || 0;
+      };
+
+      var getQrSize = function () {
+        var styles = window.getComputedStyle(container);
+        var paddingX = parsePixels(styles.paddingLeft) + parsePixels(styles.paddingRight);
+        var bounds = container.getBoundingClientRect();
+        var available = bounds.width - paddingX;
+
+        if (!available || available <= 0) {
+          var sectionBounds = section.getBoundingClientRect();
+          var fallbackBase = sectionBounds.width || window.innerWidth || 320;
+          available = fallbackBase * 0.6;
+        }
+
+        return Math.round(Math.max(140, Math.min(220, available)));
+      };
+
+      var currentSize = getQrSize();
+
       var qr = new QRCodeStyling({
-        width: 200,
-        height: 200,
+        width: currentSize,
+        height: currentSize,
         type: 'svg',
         data: target,
         margin: 0,
@@ -122,6 +143,19 @@
       });
 
       qr.append(container);
+
+      var resizeQr = function () {
+        var nextSize = getQrSize();
+        if (nextSize === currentSize) return;
+        currentSize = nextSize;
+        qr.update({
+          width: currentSize,
+          height: currentSize
+        });
+      };
+
+      resizeQr();
+      window.addEventListener('resize', resizeQr);
     });
   </script>
 </body>
