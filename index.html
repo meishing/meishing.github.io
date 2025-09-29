@@ -69,11 +69,60 @@
         </p>
       </section>
 
+      <section class="qr" data-url="https://ms.linho.me">
+        <h2>QR Code</h2>
+        <p>掃描即可快速開啟網站：ms.linho.me</p>
+        <div class="qr-code" id="qr-code" aria-hidden="true"></div>
+      </section>
+
       <footer class="footer">
         <p>預約試聽或合作洽詢：<a href="mailto:ms@linho.me">ms@linho.me</a></p>
         <p class="note">&#9835; 期待與你在音樂中相遇。</p>
       </footer>
     </main>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0/lib/qr-code-styling.js" defer></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (!window.QRCodeStyling) return;
+      var section = document.querySelector('.qr');
+      if (!section) return;
+      var target = section.getAttribute('data-url') || window.location.href;
+      var container = document.getElementById('qr-code');
+      if (!container) return;
+
+      var qr = new QRCodeStyling({
+        width: 200,
+        height: 200,
+        type: 'svg',
+        data: target,
+        margin: 0,
+        backgroundOptions: {
+          color: 'rgba(244, 241, 237, 0)'
+        },
+        dotsOptions: {
+          type: 'rounded',
+          gradient: {
+            type: 'linear',
+            rotation: Math.PI / 4,
+            colorStops: [
+              { offset: 0, color: '#c59d7c' },
+              { offset: 1, color: '#3e3a36' }
+            ]
+          }
+        },
+        cornersSquareOptions: {
+          type: 'extra-rounded',
+          color: '#8c6b50'
+        },
+        cornersDotOptions: {
+          type: 'rounded',
+          color: '#c59d7c'
+        }
+      });
+
+      qr.append(container);
+    });
+  </script>
 </body>
 </html>
